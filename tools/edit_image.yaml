@@ -1,0 +1,124 @@
+identity:
+  name: nano_banana_edit_image
+  author: stormxx
+  label:
+    en_US: Edit Image
+    zh_Hans: 编辑图片
+description:
+  human:
+    en_US: Edit or transform existing images using Gemini's Nano Banana with natural language instructions. Supports Flash and Pro models.
+    zh_Hans: 使用 Gemini 的 Nano Banana 通过自然语言指令编辑或变换已有图片。支持 Flash 和 Pro 模型。
+  llm: Edit or transform existing images using AI. Provide images and a text prompt describing the desired edits. The model will apply the edits and return a new image.
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Edit Prompt
+      zh_Hans: 编辑指令
+    human_description:
+      en_US: Text instruction describing how to edit the image
+      zh_Hans: 描述如何编辑图片的文字指令
+    llm_description: A text instruction describing the desired edits to apply to the input image(s). Be specific about what changes to make.
+    form: llm
+  - name: images
+    type: files
+    required: true
+    label:
+      en_US: Input Images
+      zh_Hans: 输入图片
+    human_description:
+      en_US: Images to edit. Flash supports up to 3 images, Pro supports up to 14.
+      zh_Hans: 要编辑的图片。Flash 支持最多 3 张，Pro 支持最多 14 张。
+    llm_description: One or more images to edit or transform. Flash model supports up to 3 images, Pro model supports up to 14 images.
+    form: llm
+  - name: model
+    type: select
+    required: true
+    default: nano_banana
+    label:
+      en_US: Model
+      zh_Hans: 模型
+    human_description:
+      en_US: "Choose a model for image editing"
+      zh_Hans: "选择图片编辑模型"
+    llm_description: "nano_banana = Gemini 2.5 Flash Image (fast, up to 3 images). nano_banana_pro = Gemini 3 Pro Image Preview (high quality, up to 14 images)."
+    form: form
+    options:
+      - value: nano_banana
+        label:
+          en_US: gemini-2.5-flash-image (Nano Banana)
+          zh_Hans: gemini-2.5-flash-image (Nano Banana)
+      - value: nano_banana_pro
+        label:
+          en_US: gemini-3-pro-image-preview (Nano Banana Pro)
+          zh_Hans: gemini-3-pro-image-preview (Nano Banana Pro)
+  - name: aspect_ratio
+    type: select
+    required: false
+    default: ""
+    label:
+      en_US: Aspect Ratio
+      zh_Hans: 宽高比
+    human_description:
+      en_US: Aspect ratio of the output image (default matches input)
+      zh_Hans: 输出图片的宽高比（默认匹配输入图片）
+    llm_description: Aspect ratio of the output image. Defaults to matching the input image aspect ratio.
+    form: form
+    options:
+      - value: ""
+        label:
+          en_US: Auto (match input)
+          zh_Hans: 自动（匹配输入）
+      - value: "1:1"
+        label:
+          en_US: "1:1 (Square)"
+          zh_Hans: "1:1（正方形）"
+      - value: "16:9"
+        label:
+          en_US: "16:9 (Landscape)"
+          zh_Hans: "16:9（横屏）"
+      - value: "9:16"
+        label:
+          en_US: "9:16 (Portrait)"
+          zh_Hans: "9:16（竖屏）"
+      - value: "4:3"
+        label:
+          en_US: "4:3"
+          zh_Hans: "4:3"
+      - value: "3:4"
+        label:
+          en_US: "3:4"
+          zh_Hans: "3:4"
+  - name: image_size
+    type: select
+    required: false
+    default: ""
+    label:
+      en_US: Image Size
+      zh_Hans: 图片尺寸
+    human_description:
+      en_US: Output resolution (Pro model only)
+      zh_Hans: 输出分辨率（仅 Pro 模型支持）
+    llm_description: Resolution of the output image. Only applies to Nano Banana Pro model.
+    form: form
+    options:
+      - value: ""
+        label:
+          en_US: Default
+          zh_Hans: 默认
+      - value: "1K"
+        label:
+          en_US: "1K"
+          zh_Hans: "1K"
+      - value: "2K"
+        label:
+          en_US: "2K"
+          zh_Hans: "2K"
+      - value: "4K"
+        label:
+          en_US: "4K"
+          zh_Hans: "4K"
+extra:
+  python:
+    source: tools/edit_image.py
