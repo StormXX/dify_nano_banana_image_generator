@@ -1,25 +1,32 @@
-# Nano Banana Generator - Dify Plugin
+# Nano Banana Image Editor - Dify Plugin
 
-A Dify tool plugin for generating and editing images using the [Nano Banana API](https://nanobananaapi.ai), powered by Google Gemini image generation models.
+A Dify tool plugin for editing images using Google Gemini's [Nano Banana](https://ai.google.dev/gemini-api/docs/image-generation) image generation capabilities.
 
 ## Features
 
-- 🎨 **Text-to-Image Generation** - Create images from text descriptions
-- ✏️ **Image Editing** - Edit existing images with natural language instructions
-- 🔄 **Dual Model Support** - Switch between Nano Banana (Flash, fast & cheap) and Nano Banana Pro (high quality, 4K)
+- ✏️ **Image Editing** — Edit existing images with natural language instructions
+- 🔄 **Dual Model Support** — Switch between two Gemini models:
 
-## Models
-
-| Model           | Engine                 | Best For                                | Cost         |
-| --------------- | ---------------------- | --------------------------------------- | ------------ |
-| Nano Banana     | Gemini 2.5 Flash Image | Fast prototyping, batch generation      | ~$0.02/image |
-| Nano Banana Pro | Gemini 3 Pro Image     | Studio-quality, 4K output, precise text | ~$0.12/image |
+| Model           | Model ID                     | Best For                                        |
+| --------------- | ---------------------------- | ----------------------------------------------- |
+| Nano Banana     | `gemini-2.5-flash-image`     | Fast editing, low latency                       |
+| Nano Banana Pro | `gemini-3-pro-image-preview` | High quality, 4K output, precise text rendering |
 
 ## Setup
 
-1. Get your API key from [nanobananaapi.ai/api-key](https://nanobananaapi.ai/api-key)
-2. Install this plugin in your Dify instance
-3. Configure the API key in the plugin settings
+1. Get your Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
+2. Install this plugin in your Dify instance (via GitHub or `.difypkg` upload)
+3. Configure the Gemini API Key in the plugin settings
+
+## Usage
+
+In a Dify workflow or agent, use the **Edit Image** tool:
+
+- **Input Images** — Accepts `Array[File]` from upstream nodes
+- **Edit Prompt** — Natural language instruction (e.g. "Remove the background", "Make it look like a watercolor painting")
+- **Model** — Choose Flash (fast) or Pro (high quality)
+- **Aspect Ratio** — Optional, defaults to matching input
+- **Image Size** — 1K / 2K / 4K (Pro model only)
 
 ## License
 
