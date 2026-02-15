@@ -23,7 +23,7 @@ class NanoBananaProvider(ToolProvider):
                 headers={"x-goog-api-key": api_key},
                 timeout=(5, 30),
             )
-            if response.status_code == 400 or response.status_code == 403:
+            if response.status_code in (400, 401, 403):
                 raise ToolProviderCredentialValidationError("Invalid Gemini API Key.")
             if not response.ok:
                 raise ToolProviderCredentialValidationError(

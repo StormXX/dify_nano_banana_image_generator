@@ -1,12 +1,12 @@
 author: stormxx
 created_at: "2026-02-15T11:49:12+08:00"
 description:
-  en_US: Generate and edit images using Nano Banana API (powered by Gemini 2.5 Flash Image model)
-  zh_Hans: 使用 Nano Banana API（基于 Gemini 2.5 Flash Image 模型）生成和编辑图片
+  en_US: Edit images using Gemini Nano Banana (supports Gemini 2.5 Flash Image and Gemini 3 Pro Image Preview)
+  zh_Hans: 使用 Gemini Nano Banana 编辑图片（支持 Gemini 2.5 Flash Image 和 Gemini 3 Pro Image Preview 模型）
 icon: icon.svg
 label:
-  en_US: Nano Banana Generator
-  zh_Hans: Nano Banana 图片生成器
+  en_US: Nano Banana Image Editor
+  zh_Hans: Nano Banana 图片编辑器
 meta:
   arch:
     - amd64

@@ -2,11 +2,11 @@ identity:
   author: stormxx
   name: nano_banana
   label:
-    en_US: Nano Banana Generator
-    zh_Hans: Nano Banana 图片生成器
+    en_US: Nano Banana Image Editor
+    zh_Hans: Nano Banana 图片编辑器
   description:
-    en_US: Generate and edit images using Google Gemini's Nano Banana image generation capabilities. Supports Gemini 2.5 Flash Image and Gemini 3 Pro Image Preview models.
-    zh_Hans: 使用 Google Gemini 的 Nano Banana 图片生成能力生成和编辑图片。支持 Gemini 2.5 Flash Image 和 Gemini 3 Pro Image Preview 模型。
+    en_US: Edit images using Google Gemini's Nano Banana. Supports Gemini 2.5 Flash Image and Gemini 3 Pro Image Preview models.
+    zh_Hans: 使用 Google Gemini 的 Nano Banana 编辑图片。支持 Gemini 2.5 Flash Image 和 Gemini 3 Pro Image Preview 模型。
   icon: icon.svg
   tags:
     - image

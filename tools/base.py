@@ -170,24 +170,4 @@ class NanoBananaBase:
                 return inline_data.get("mimeType", "image/png")
         return "image/png"
 
-    def _download_image_as_base64(self, image_url: str) -> dict[str, str]:
-        """
-        Download an image from URL and return it as base64 data
-        suitable for inline_data in a Gemini API request.
-        """
-        response = requests.get(url=image_url, timeout=(10, 60))
-        if not response.ok:
-            raise Exception(
-                f"Failed to download image from {image_url}: HTTP {response.status_code}"
-            )
 
-        # Determine mime type from response headers
-        content_type = response.headers.get("Content-Type", "image/png")
-        if ";" in content_type:
-            content_type = content_type.split(";")[0].strip()
-
-        encoded = base64.b64encode(response.content).decode("utf-8")
-        return {
-            "mime_type": content_type,
-            "data": encoded,
-        }
