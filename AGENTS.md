@@ -9,10 +9,10 @@
 | 模型            | Gemini 模型 ID                    | 特点                                             |
 | --------------- | --------------------------------- | ------------------------------------------------ |
 | Nano Banana     | `gemini-2.5-flash-image`          | 快速高效，1024px，最多 3 张输入图                |
-| Nano Banana 2   | `gemini-3.1-flash-image-preview`  | 通用高效，最高 4K，最多 14 张输入图              |
+| Nano Banana 2   | `gemini-3.1-flash-image`          | 通用高效，最高 4K，最多 14 张输入图              |
 | Nano Banana Pro | `gemini-3-pro-image-preview`      | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
 
-Nano Banana Pro 调用会优先使用官方图像生成文档中的 `gemini-3-pro-image-preview`，如果 Google rollout 中返回 404，会依次尝试后续的 `gemini-3-pro-image` 和 `gemini-3.1-pro-image`。
+Nano Banana 2 使用 `v1` REST 端点。Nano Banana Pro 按 Gemini 3 图像生成 REST 示例使用 `v1beta` 端点和 `gemini-3-pro-image-preview`。
 
 ### 功能
 
@@ -69,9 +69,11 @@ Gemini 图像生成是 **同步 API**：发送请求后直接返回结果（base
     }
   ],
   "generationConfig": {
-    "imageConfig": {
-      "aspectRatio": "16:9",
-      "imageSize": "2K"
+    "responseFormat": {
+      "image": {
+        "aspectRatio": "16:9",
+        "imageSize": "2K"
+      }
     }
   }
 }

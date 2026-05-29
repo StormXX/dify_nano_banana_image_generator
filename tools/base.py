@@ -8,7 +8,7 @@ GEMINI_API_V1BETA_BASE = "https://generativelanguage.googleapis.com/v1beta/model
 
 # Model identifiers
 MODEL_NANO_BANANA = "gemini-2.5-flash-image"
-MODEL_NANO_BANANA_2 = "gemini-3.1-flash-image-preview"
+MODEL_NANO_BANANA_2 = "gemini-3.1-flash-image"
 MODEL_NANO_BANANA_PRO = "gemini-3-pro-image-preview"
 
 MODEL_IDS = {
@@ -19,16 +19,13 @@ MODEL_IDS = {
 
 MODEL_ENDPOINTS = {
     "nano_banana": [
-        (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA),
         (GEMINI_API_V1_BASE, MODEL_NANO_BANANA),
     ],
     "nano_banana_2": [
-        (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA_2),
+        (GEMINI_API_V1_BASE, MODEL_NANO_BANANA_2),
     ],
     "nano_banana_pro": [
         (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA_PRO),
-        (GEMINI_API_V1_BASE, "gemini-3-pro-image"),
-        (GEMINI_API_V1_BASE, "gemini-3.1-pro-image"),
     ],
 }
 
@@ -195,13 +192,16 @@ class NanoBananaBase:
         """
         config: dict[str, Any] = {}
 
+        if response_modalities and model != "nano_banana_pro":
+            config["responseModalities"] = response_modalities
+
         image_config: dict[str, Any] = {}
         if aspect_ratio:
             image_config["aspectRatio"] = aspect_ratio
         if image_size:
             image_config["imageSize"] = image_size
         if image_config:
-            config["imageConfig"] = image_config
+            config["responseFormat"] = {"image": image_config}
 
         return config
 
@@ -214,7 +214,8 @@ class NanoBananaBase:
         """Enable Google Search grounding for Gemini 3 image models."""
         if use_google_search:
             self._validate_image_options(model, use_google_search=True)
-            body["tools"] = [{"google_search": {}}]
+            tool_name = "googleSearch" if model == "nano_banana_pro" else "google_search"
+            body["tools"] = [{tool_name: {}}]
 
     def _build_text_content(self, prompt: str) -> dict[str, Any]:
         """Build a contents entry with just a text prompt."""

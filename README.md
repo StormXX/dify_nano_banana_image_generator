@@ -16,12 +16,11 @@ A Dify tool plugin for generating and editing images with Google Gemini's
 | Plugin option | Gemini model ID | Best for |
 | ------------- | --------------- | -------- |
 | `nano_banana` | `gemini-2.5-flash-image` | Legacy Nano Banana, fast 1024px workflows, up to 3 input images |
-| `nano_banana_2` | `gemini-3.1-flash-image-preview` | Default all-around model, up to 14 reference images, 512/1K/2K/4K output |
+| `nano_banana_2` | `gemini-3.1-flash-image` | Default all-around model, up to 14 reference images, 512/1K/2K/4K output |
 | `nano_banana_pro` | `gemini-3-pro-image-preview` | Highest quality, thinking, precise text rendering, Google Search grounding, up to 4K |
 
-For Nano Banana Pro, the plugin first calls the currently reachable
-`gemini-3-pro-image-preview` endpoint. If Google moves access during rollout, it retries
-the later `gemini-3-pro-image` and `gemini-3.1-pro-image` endpoints.
+Nano Banana 2 uses the `v1` REST endpoint. Nano Banana Pro follows the Gemini 3
+image REST example and uses the `v1beta` endpoint with `gemini-3-pro-image-preview`.
 
 ## Setup
 
