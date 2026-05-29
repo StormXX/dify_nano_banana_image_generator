@@ -2,21 +2,20 @@
 
 ## 项目概述
 
-这是一个 Dify 工具插件，集成了 Google Gemini 的 **Nano Banana** 图像生成能力。Nano Banana 是 Gemini 原生图像生成功能的名称，使用 Google 官方的 `generativelanguage.googleapis.com` API。
+这是一个 Dify 工具插件，集成了 Google Gemini 的 **Nano Banana** 图像编辑能力。插件只暴露 **Edit Image** 工具，不提供 text-to-image 工具。
 
 ### 支持的模型
 
-| 模型            | Gemini 模型 ID                    | 特点                                             |
-| --------------- | --------------------------------- | ------------------------------------------------ |
-| Nano Banana     | `gemini-2.5-flash-image`          | 快速高效，1024px，最多 3 张输入图                |
-| Nano Banana 2   | `gemini-3.1-flash-image`          | 通用高效，最高 4K，最多 14 张输入图              |
-| Nano Banana Pro | `gemini-3-pro-image`              | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
+| 模型            | Gemini 模型 ID               | 特点                                             |
+| --------------- | ---------------------------- | ------------------------------------------------ |
+| Nano Banana     | `gemini-2.5-flash-image`     | 快速高效，最多 3 张输入图                        |
+| Nano Banana 2   | `gemini-3.1-flash-image`     | 通用高效，最高 4K，最多 14 张输入图              |
+| Nano Banana Pro | `gemini-3-pro-image`         | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
 
-插件只使用 `models.generateContent` REST API，不使用 Interactions API。Nano Banana Pro 优先使用 `gemini-3-pro-image`，只有当前端点返回 `NOT_FOUND` 时才回退到 `gemini-3-pro-image-preview`。
+插件沿用 `0.0.2` 的简单 `generateContent` 请求结构：单一 `v1beta` REST 端点、无 Google Search、无 Interactions API、无 endpoint fallback。
 
 ### 功能
 
-- **文本生成图片** (`generate_image`) - 根据文本提示词生成图片
 - **图片编辑** (`edit_image`) - 提供图片文件 + 文字指令编辑图片
 
 ## 项目结构
@@ -32,8 +31,6 @@ nano_banana_generator/
 │   └── nano_banana.py         # 凭证验证（调用 Gemini models 端点）
 └── tools/
     ├── base.py                # 共用基类（Gemini REST API 封装）
-    ├── generate_image.yaml    # 文生图工具参数定义
-    ├── generate_image.py      # 文生图工具实现
     ├── edit_image.yaml        # 图片编辑工具参数定义
     └── edit_image.py          # 图片编辑工具实现
 ```
@@ -45,7 +42,7 @@ nano_banana_generator/
 使用 Google Gemini 官方 REST API:
 
 ```
-POST https://generativelanguage.googleapis.com/{apiVersion}/models/{model}:generateContent
+POST https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
 ```
 
 ### 认证

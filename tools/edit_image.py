@@ -32,18 +32,7 @@ class EditImageTool(Tool, NanoBananaBase):
         model = tool_parameters.get("model", "nano_banana")
         aspect_ratio = tool_parameters.get("aspect_ratio", "")
         image_size = tool_parameters.get("image_size", "")
-        use_google_search = self._as_bool(
-            tool_parameters.get("use_google_search", False)
-        )
         credentials = self.runtime.credentials
-
-        self._validate_image_count(model, len(files))
-        self._validate_image_options(
-            model=model,
-            aspect_ratio=aspect_ratio,
-            image_size=image_size,
-            use_google_search=use_google_search,
-        )
 
         # Convert Dify File objects to base64 inline_data for Gemini API
         image_data_list = []
@@ -51,8 +40,6 @@ class EditImageTool(Tool, NanoBananaBase):
             # Dify File object has .blob (bytes) and .mime_type properties
             file_bytes = file.blob
             mime_type = file.mime_type or "image/png"
-            if not mime_type.startswith("image/"):
-                raise ValueError(f"Unsupported file MIME type: {mime_type}")
             encoded = base64.b64encode(file_bytes).decode("utf-8")
             image_data_list.append({
                 "mime_type": mime_type,
@@ -71,7 +58,6 @@ class EditImageTool(Tool, NanoBananaBase):
         )
         if gen_config:
             body["generationConfig"] = gen_config
-        self._add_google_search_tool(body, model, use_google_search)
 
         # Call Gemini API (synchronous — returns image immediately)
         response_json = self._call_gemini_api(credentials, model, body)

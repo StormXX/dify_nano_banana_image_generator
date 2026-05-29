@@ -6,9 +6,9 @@ identity:
     zh_Hans: 编辑图片
 description:
   human:
-    en_US: Edit or transform existing images using Gemini Nano Banana models with natural language instructions.
-    zh_Hans: 使用 Gemini Nano Banana 系列模型通过自然语言指令编辑或变换已有图片。
-  llm: Edit or transform input images using Gemini image generation. Provide images and a precise text instruction describing the desired edits. The tool returns a new image and may also return text notes from Gemini.
+    en_US: Edit or transform existing images using Gemini's Nano Banana with natural language instructions. Supports Nano Banana, Nano Banana 2, and Pro models.
+    zh_Hans: 使用 Gemini 的 Nano Banana 通过自然语言指令编辑或变换已有图片。支持 Nano Banana、Nano Banana 2 和 Pro 模型。
+  llm: Edit or transform existing images using AI. Provide images and a text prompt describing the desired edits. The model will apply the edits and return a new image.
 parameters:
   - name: prompt
     type: string
@@ -19,7 +19,7 @@ parameters:
     human_description:
       en_US: Text instruction describing how to edit the image
       zh_Hans: 描述如何编辑图片的文字指令
-    llm_description: A specific text instruction describing the desired edits to apply to the input image(s).
+    llm_description: A text instruction describing the desired edits to apply to the input image(s). Be specific about what changes to make.
     form: llm
   - name: images
     type: files
@@ -28,9 +28,9 @@ parameters:
       en_US: Input Images
       zh_Hans: 输入图片
     human_description:
-      en_US: Images to edit. Nano Banana supports up to 3 images; Nano Banana 2 and Pro support up to 14 reference images.
-      zh_Hans: 要编辑的图片。Nano Banana 支持最多 3 张；Nano Banana 2 和 Pro 支持最多 14 张参考图。
-    llm_description: One or more images to edit or transform. Nano Banana supports up to 3 images; Nano Banana 2 and Nano Banana Pro support up to 14 reference images.
+      en_US: Images to edit. Nano Banana supports up to 3 images; Nano Banana 2 and Pro support up to 14.
+      zh_Hans: 要编辑的图片。Nano Banana 支持最多 3 张；Nano Banana 2 和 Pro 支持最多 14 张。
+    llm_description: One or more images to edit or transform. Nano Banana supports up to 3 images; Nano Banana 2 and Pro support up to 14 images.
     form: llm
   - name: model
     type: select
@@ -40,9 +40,9 @@ parameters:
       en_US: Model
       zh_Hans: 模型
     human_description:
-      en_US: Choose a Gemini image model for editing
-      zh_Hans: 选择用于图片编辑的 Gemini 图像模型
-    llm_description: "nano_banana = gemini-2.5-flash-image; nano_banana_2 = gemini-3.1-flash-image; nano_banana_pro = gemini-3-pro-image."
+      en_US: "Choose a model for image editing"
+      zh_Hans: "选择图片编辑模型"
+    llm_description: "nano_banana = Gemini 2.5 Flash Image (fast, up to 3 images). nano_banana_2 = Gemini 3.1 Flash Image (general, up to 14 images). nano_banana_pro = Gemini 3 Pro Image (high quality, up to 14 images)."
     form: form
     options:
       - value: nano_banana
@@ -65,71 +65,35 @@ parameters:
       en_US: Aspect Ratio
       zh_Hans: 宽高比
     human_description:
-      en_US: Output image aspect ratio. Auto lets Gemini choose based on reference images.
-      zh_Hans: 输出图片的宽高比。自动模式会让 Gemini 根据参考图选择。
-    llm_description: Optional output aspect ratio. Leave empty to let Gemini choose from the prompt and reference images.
+      en_US: Aspect ratio of the output image (default matches input)
+      zh_Hans: 输出图片的宽高比（默认匹配输入图片）
+    llm_description: Aspect ratio of the output image. Defaults to matching the input image aspect ratio.
     form: form
     options:
       - value: ""
         label:
-          en_US: Auto
-          zh_Hans: 自动
+          en_US: Auto (match input)
+          zh_Hans: 自动（匹配输入）
       - value: "1:1"
         label:
-          en_US: "1:1 Square"
-          zh_Hans: "1:1 正方形"
-      - value: "2:3"
-        label:
-          en_US: "2:3 Portrait"
-          zh_Hans: "2:3 竖图"
-      - value: "3:2"
-        label:
-          en_US: "3:2 Landscape"
-          zh_Hans: "3:2 横图"
-      - value: "3:4"
-        label:
-          en_US: "3:4 Portrait"
-          zh_Hans: "3:4 竖图"
-      - value: "4:3"
-        label:
-          en_US: "4:3 Landscape"
-          zh_Hans: "4:3 横图"
-      - value: "4:5"
-        label:
-          en_US: "4:5 Social portrait"
-          zh_Hans: "4:5 社媒竖图"
-      - value: "5:4"
-        label:
-          en_US: "5:4 Social landscape"
-          zh_Hans: "5:4 社媒横图"
-      - value: "9:16"
-        label:
-          en_US: "9:16 Vertical"
-          zh_Hans: "9:16 竖屏"
+          en_US: "1:1 (Square)"
+          zh_Hans: "1:1（正方形）"
       - value: "16:9"
         label:
-          en_US: "16:9 Widescreen"
-          zh_Hans: "16:9 宽屏"
-      - value: "21:9"
+          en_US: "16:9 (Landscape)"
+          zh_Hans: "16:9（横屏）"
+      - value: "9:16"
         label:
-          en_US: "21:9 Ultrawide"
-          zh_Hans: "21:9 超宽屏"
-      - value: "1:4"
+          en_US: "9:16 (Portrait)"
+          zh_Hans: "9:16（竖屏）"
+      - value: "4:3"
         label:
-          en_US: "1:4 Tall (Nano Banana 2)"
-          zh_Hans: "1:4 长竖图（Nano Banana 2）"
-      - value: "4:1"
+          en_US: "4:3"
+          zh_Hans: "4:3"
+      - value: "3:4"
         label:
-          en_US: "4:1 Wide (Nano Banana 2)"
-          zh_Hans: "4:1 长横图（Nano Banana 2）"
-      - value: "1:8"
-        label:
-          en_US: "1:8 Extra tall (Nano Banana 2)"
-          zh_Hans: "1:8 超长竖图（Nano Banana 2）"
-      - value: "8:1"
-        label:
-          en_US: "8:1 Extra wide (Nano Banana 2)"
-          zh_Hans: "8:1 超长横图（Nano Banana 2）"
+          en_US: "3:4"
+          zh_Hans: "3:4"
   - name: image_size
     type: select
     required: false
@@ -138,9 +102,9 @@ parameters:
       en_US: Image Size
       zh_Hans: 图片尺寸
     human_description:
-      en_US: Output resolution. 512 is only supported by Nano Banana 2; Pro supports 1K, 2K, and 4K.
-      zh_Hans: 输出分辨率。512 仅 Nano Banana 2 支持；Pro 支持 1K、2K 和 4K。
-    llm_description: Optional output resolution. 512 is only valid with nano_banana_2. 1K, 2K, and 4K are valid with nano_banana_2 and nano_banana_pro.
+      en_US: Output resolution (Nano Banana 2 and Pro only)
+      zh_Hans: 输出分辨率（仅 Nano Banana 2 和 Pro 模型支持）
+    llm_description: Resolution of the output image. Only applies to Nano Banana 2 and Nano Banana Pro.
     form: form
     options:
       - value: ""
@@ -163,18 +127,6 @@ parameters:
         label:
           en_US: "4K"
           zh_Hans: "4K"
-  - name: use_google_search
-    type: boolean
-    required: false
-    default: false
-    label:
-      en_US: Google Search Grounding
-      zh_Hans: Google 搜索 grounding
-    human_description:
-      en_US: Let Gemini 3 image models use Google Search for current facts, charts, weather, or news-based visuals.
-      zh_Hans: 允许 Gemini 3 图像模型使用 Google 搜索生成基于实时事实、图表、天气或新闻的图片。
-    llm_description: Enable Google Search grounding for Nano Banana 2 or Nano Banana Pro when the requested image depends on current facts or real-world data.
-    form: form
 extra:
   python:
     source: tools/edit_image.py
