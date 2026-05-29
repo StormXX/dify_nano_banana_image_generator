@@ -10,7 +10,9 @@
 | --------------- | --------------------------------- | ------------------------------------------------ |
 | Nano Banana     | `gemini-2.5-flash-image`          | 快速高效，1024px，最多 3 张输入图                |
 | Nano Banana 2   | `gemini-3.1-flash-image-preview`  | 通用高效，最高 4K，最多 14 张输入图              |
-| Nano Banana Pro | `gemini-3.1-pro-image`            | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
+| Nano Banana Pro | `gemini-3-pro-image-preview`      | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
+
+Nano Banana Pro 调用会优先使用官方图像生成文档中的 `gemini-3-pro-image-preview`，如果 Google rollout 中返回 404，会依次尝试后续的 `gemini-3-pro-image` 和 `gemini-3.1-pro-image`。
 
 ### 功能
 
@@ -43,7 +45,7 @@ nano_banana_generator/
 使用 Google Gemini 官方 REST API:
 
 ```
-POST https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
+POST https://generativelanguage.googleapis.com/{apiVersion}/models/{model}:generateContent
 ```
 
 ### 认证
@@ -67,7 +69,6 @@ Gemini 图像生成是 **同步 API**：发送请求后直接返回结果（base
     }
   ],
   "generationConfig": {
-    "responseModalities": ["TEXT", "IMAGE"],
     "imageConfig": {
       "aspectRatio": "16:9",
       "imageSize": "2K"

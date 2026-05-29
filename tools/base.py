@@ -3,17 +3,33 @@ from typing import Any
 
 import requests
 
-GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
+GEMINI_API_V1_BASE = "https://generativelanguage.googleapis.com/v1/models"
+GEMINI_API_V1BETA_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 
 # Model identifiers
 MODEL_NANO_BANANA = "gemini-2.5-flash-image"
 MODEL_NANO_BANANA_2 = "gemini-3.1-flash-image-preview"
-MODEL_NANO_BANANA_PRO = "gemini-3.1-pro-image"
+MODEL_NANO_BANANA_PRO = "gemini-3-pro-image-preview"
 
 MODEL_IDS = {
     "nano_banana": MODEL_NANO_BANANA,
     "nano_banana_2": MODEL_NANO_BANANA_2,
     "nano_banana_pro": MODEL_NANO_BANANA_PRO,
+}
+
+MODEL_ENDPOINTS = {
+    "nano_banana": [
+        (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA),
+        (GEMINI_API_V1_BASE, MODEL_NANO_BANANA),
+    ],
+    "nano_banana_2": [
+        (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA_2),
+    ],
+    "nano_banana_pro": [
+        (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA_PRO),
+        (GEMINI_API_V1_BASE, "gemini-3-pro-image"),
+        (GEMINI_API_V1_BASE, "gemini-3.1-pro-image"),
+    ],
 }
 
 MAX_INPUT_IMAGES = {
@@ -88,7 +104,17 @@ class NanoBananaBase:
 
     def _get_generate_url(self, model_name: str) -> str:
         """Get the generateContent API endpoint URL for the given model."""
-        return f"{GEMINI_API_BASE}/{model_name}:generateContent"
+        return f"{GEMINI_API_V1BETA_BASE}/{model_name}:generateContent"
+
+    def _get_generate_candidates(self, model: str) -> list[tuple[str, str]]:
+        """Get API endpoint/model candidates for a logical plugin model."""
+        if model not in MODEL_ENDPOINTS:
+            raise ValueError(f"Unsupported model: {model}")
+        return MODEL_ENDPOINTS[model]
+
+    def _build_generate_url(self, api_base: str, model_name: str) -> str:
+        """Build a generateContent URL for a concrete API channel and model."""
+        return f"{api_base}/{model_name}:generateContent"
 
     def _build_request_headers(self, credentials: dict[str, Any]) -> dict[str, str]:
         """Build request headers with Gemini API key."""
@@ -165,12 +191,9 @@ class NanoBananaBase:
             model: "nano_banana", "nano_banana_2", or "nano_banana_pro"
             aspect_ratio: e.g. "1:1", "16:9"
             image_size: e.g. "512", "1K", "2K", "4K"
-            response_modalities: e.g. ["TEXT", "IMAGE"] or ["IMAGE"]
+            response_modalities: kept for backwards-compatible call sites
         """
         config: dict[str, Any] = {}
-
-        if response_modalities:
-            config["responseModalities"] = response_modalities
 
         image_config: dict[str, Any] = {}
         if aspect_ratio:
@@ -235,24 +258,34 @@ class NanoBananaBase:
         Call the Gemini generateContent API and return the response JSON.
         This is a synchronous call — the image is returned immediately.
         """
-        model_name = self._get_model_name(model)
-        url = self._get_generate_url(model_name)
         headers = self._build_request_headers(credentials)
+        attempted_urls = []
 
-        response = requests.post(
-            url=url,
-            headers=headers,
-            json=request_body,
-            timeout=(10, 290),
-        )
+        for api_base, model_name in self._get_generate_candidates(model):
+            url = self._build_generate_url(api_base, model_name)
+            attempted_urls.append(url)
+            response = requests.post(
+                url=url,
+                headers=headers,
+                json=request_body,
+                timeout=(10, 290),
+            )
 
-        if not response.ok:
+            if response.ok:
+                return response.json()
+
             error_detail = self._format_error_response(response)
+            if response.status_code == 404 and "NOT_FOUND" in error_detail:
+                continue
+
             raise Exception(
                 f"Gemini API error: HTTP {response.status_code} - {error_detail}"
             )
 
-        return response.json()
+        raise Exception(
+            "Gemini API error: no compatible model endpoint found. "
+            f"Tried: {', '.join(attempted_urls)}"
+        )
 
     def _format_error_response(self, response: requests.Response) -> str:
         """Extract a compact Gemini error message from an HTTP response."""
