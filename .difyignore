@@ -1,0 +1,11 @@
+.git
+.git/**
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.env
+.venv/
+venv/
+tmp/
+*.difypkg

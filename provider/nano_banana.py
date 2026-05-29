@@ -5,7 +5,7 @@ import requests
 from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
-GEMINI_MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+GEMINI_MODELS_URL = "https://generativelanguage.googleapis.com/v1/models"
 
 
 class NanoBananaProvider(ToolProvider):

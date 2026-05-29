@@ -1,47 +1,36 @@
 identity:
-  name: nano_banana_edit_image
+  name: nano_banana_generate_image
   author: stormxx
   label:
-    en_US: Edit Image
-    zh_Hans: 编辑图片
+    en_US: Generate Image
+    zh_Hans: 生成图片
 description:
   human:
-    en_US: Edit or transform existing images using Gemini Nano Banana models with natural language instructions.
-    zh_Hans: 使用 Gemini Nano Banana 系列模型通过自然语言指令编辑或变换已有图片。
-  llm: Edit or transform input images using Gemini image generation. Provide images and a precise text instruction describing the desired edits. The tool returns a new image and may also return text notes from Gemini.
+    en_US: Generate images from text prompts using Gemini Nano Banana models.
+    zh_Hans: 使用 Gemini Nano Banana 系列模型根据文本提示词生成图片。
+  llm: Generate an image from a text prompt using Gemini image generation. The tool returns an image file and may also return text notes from Gemini.
 parameters:
   - name: prompt
     type: string
     required: true
     label:
-      en_US: Edit Prompt
-      zh_Hans: 编辑指令
+      en_US: Prompt
+      zh_Hans: 提示词
     human_description:
-      en_US: Text instruction describing how to edit the image
-      zh_Hans: 描述如何编辑图片的文字指令
-    llm_description: A specific text instruction describing the desired edits to apply to the input image(s).
-    form: llm
-  - name: images
-    type: files
-    required: true
-    label:
-      en_US: Input Images
-      zh_Hans: 输入图片
-    human_description:
-      en_US: Images to edit. Nano Banana supports up to 3 images; Nano Banana 2 and Pro support up to 14 reference images.
-      zh_Hans: 要编辑的图片。Nano Banana 支持最多 3 张；Nano Banana 2 和 Pro 支持最多 14 张参考图。
-    llm_description: One or more images to edit or transform. Nano Banana supports up to 3 images; Nano Banana 2 and Nano Banana Pro support up to 14 reference images.
+      en_US: Text prompt describing the image to generate
+      zh_Hans: 描述要生成图片的文本提示词
+    llm_description: A detailed text prompt describing the image to generate, including subject, style, composition, text to render, and constraints.
     form: llm
   - name: model
     type: select
     required: true
-    default: nano_banana
+    default: nano_banana_2
     label:
       en_US: Model
       zh_Hans: 模型
     human_description:
-      en_US: Choose a Gemini image model for editing
-      zh_Hans: 选择用于图片编辑的 Gemini 图像模型
+      en_US: Choose a Gemini image model for generation
+      zh_Hans: 选择用于图片生成的 Gemini 图像模型
     llm_description: "nano_banana = gemini-2.5-flash-image; nano_banana_2 = gemini-3.1-flash-image; nano_banana_pro = gemini-3-pro-image."
     form: form
     options:
@@ -65,9 +54,9 @@ parameters:
       en_US: Aspect Ratio
       zh_Hans: 宽高比
     human_description:
-      en_US: Output image aspect ratio. Auto lets Gemini choose based on reference images.
-      zh_Hans: 输出图片的宽高比。自动模式会让 Gemini 根据参考图选择。
-    llm_description: Optional output aspect ratio. Leave empty to let Gemini choose from the prompt and reference images.
+      en_US: Output image aspect ratio. Auto lets Gemini choose based on the prompt.
+      zh_Hans: 输出图片的宽高比。自动模式会让 Gemini 根据提示词选择。
+    llm_description: Optional output aspect ratio. Leave empty to let Gemini choose from the prompt.
     form: form
     options:
       - value: ""
@@ -177,4 +166,4 @@ parameters:
     form: form
 extra:
   python:
-    source: tools/edit_image.py
+    source: tools/generate_image.py

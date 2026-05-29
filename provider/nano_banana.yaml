@@ -2,11 +2,11 @@ identity:
   author: stormxx
   name: nano_banana
   label:
-    en_US: Nano Banana Image Editor
-    zh_Hans: Nano Banana 图片编辑器
+    en_US: Nano Banana Image Generator
+    zh_Hans: Nano Banana 图片生成器
   description:
-    en_US: Edit images using Google Gemini's Nano Banana. Supports Gemini 2.5 Flash Image and Gemini 3 Pro Image Preview models.
-    zh_Hans: 使用 Google Gemini 的 Nano Banana 编辑图片。支持 Gemini 2.5 Flash Image 和 Gemini 3 Pro Image Preview 模型。
+    en_US: Generate and edit images using Google Gemini's Nano Banana models, including Nano Banana 2 and Nano Banana Pro.
+    zh_Hans: 使用 Google Gemini 的 Nano Banana 系列模型生成和编辑图片，包括 Nano Banana 2 和 Nano Banana Pro。
   icon: icon.svg
   tags:
     - image
@@ -25,6 +25,7 @@ credentials_for_provider:
       zh_Hans: 从 Google AI Studio 获取你的 API Key
     url: https://aistudio.google.com/apikey
 tools:
+  - tools/generate_image.yaml
   - tools/edit_image.yaml
 extra:
   python:
