@@ -3,12 +3,12 @@ from typing import Any
 
 import requests
 
-GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1/models"
+GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 
 # Model identifiers
 MODEL_NANO_BANANA = "gemini-2.5-flash-image"
-MODEL_NANO_BANANA_2 = "gemini-3.1-flash-image"
-MODEL_NANO_BANANA_PRO = "gemini-3-pro-image"
+MODEL_NANO_BANANA_2 = "gemini-3.1-flash-image-preview"
+MODEL_NANO_BANANA_PRO = "gemini-3.1-pro-image"
 
 MODEL_IDS = {
     "nano_banana": MODEL_NANO_BANANA,
@@ -172,13 +172,13 @@ class NanoBananaBase:
         if response_modalities:
             config["responseModalities"] = response_modalities
 
-        image_format: dict[str, Any] = {}
+        image_config: dict[str, Any] = {}
         if aspect_ratio:
-            image_format["aspectRatio"] = aspect_ratio
+            image_config["aspectRatio"] = aspect_ratio
         if image_size:
-            image_format["imageSize"] = image_size
-        if image_format:
-            config["responseFormat"] = {"image": image_format}
+            image_config["imageSize"] = image_size
+        if image_config:
+            config["imageConfig"] = image_config
 
         return config
 
@@ -338,4 +338,3 @@ class NanoBananaBase:
             if inline_data:
                 return inline_data.get("mimeType", "image/png")
         return "image/png"
-

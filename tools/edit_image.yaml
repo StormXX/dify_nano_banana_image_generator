@@ -42,7 +42,7 @@ parameters:
     human_description:
       en_US: Choose a Gemini image model for editing
       zh_Hans: 选择用于图片编辑的 Gemini 图像模型
-    llm_description: "nano_banana = gemini-2.5-flash-image; nano_banana_2 = gemini-3.1-flash-image; nano_banana_pro = gemini-3-pro-image."
+    llm_description: "nano_banana = gemini-2.5-flash-image; nano_banana_2 = gemini-3.1-flash-image-preview; nano_banana_pro = gemini-3.1-pro-image."
     form: form
     options:
       - value: nano_banana
@@ -51,12 +51,12 @@ parameters:
           zh_Hans: gemini-2.5-flash-image (Nano Banana)
       - value: nano_banana_2
         label:
-          en_US: gemini-3.1-flash-image (Nano Banana 2)
-          zh_Hans: gemini-3.1-flash-image (Nano Banana 2)
+          en_US: gemini-3.1-flash-image-preview (Nano Banana 2)
+          zh_Hans: gemini-3.1-flash-image-preview (Nano Banana 2)
       - value: nano_banana_pro
         label:
-          en_US: gemini-3-pro-image (Nano Banana Pro)
-          zh_Hans: gemini-3-pro-image (Nano Banana Pro)
+          en_US: gemini-3.1-pro-image (Nano Banana Pro)
+          zh_Hans: gemini-3.1-pro-image (Nano Banana Pro)
   - name: aspect_ratio
     type: select
     required: false
