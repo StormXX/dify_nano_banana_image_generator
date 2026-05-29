@@ -10,9 +10,9 @@
 | --------------- | --------------------------------- | ------------------------------------------------ |
 | Nano Banana     | `gemini-2.5-flash-image`          | 快速高效，1024px，最多 3 张输入图                |
 | Nano Banana 2   | `gemini-3.1-flash-image`          | 通用高效，最高 4K，最多 14 张输入图              |
-| Nano Banana Pro | `gemini-3-pro-image-preview`      | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
+| Nano Banana Pro | `gemini-3-pro-image`              | 高质量，最高 4K，Thinking 推理，最多 14 张输入图 |
 
-Nano Banana 2 使用 `v1` REST 端点。Nano Banana Pro 按 Gemini 3 图像生成 REST 示例使用 `v1beta` 端点和 `gemini-3-pro-image-preview`。
+插件只使用 `models.generateContent` REST API，不使用 Interactions API。Nano Banana Pro 优先使用 `gemini-3-pro-image`，只有当前端点返回 `NOT_FOUND` 时才回退到 `gemini-3-pro-image-preview`。
 
 ### 功能
 
@@ -69,11 +69,10 @@ Gemini 图像生成是 **同步 API**：发送请求后直接返回结果（base
     }
   ],
   "generationConfig": {
-    "responseFormat": {
-      "image": {
-        "aspectRatio": "16:9",
-        "imageSize": "2K"
-      }
+    "responseModalities": ["TEXT", "IMAGE"],
+    "imageConfig": {
+      "aspectRatio": "16:9",
+      "imageSize": "2K"
     }
   }
 }

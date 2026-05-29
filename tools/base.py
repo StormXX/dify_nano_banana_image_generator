@@ -9,7 +9,8 @@ GEMINI_API_V1BETA_BASE = "https://generativelanguage.googleapis.com/v1beta/model
 # Model identifiers
 MODEL_NANO_BANANA = "gemini-2.5-flash-image"
 MODEL_NANO_BANANA_2 = "gemini-3.1-flash-image"
-MODEL_NANO_BANANA_PRO = "gemini-3-pro-image-preview"
+MODEL_NANO_BANANA_PRO = "gemini-3-pro-image"
+MODEL_NANO_BANANA_PRO_PREVIEW = "gemini-3-pro-image-preview"
 
 MODEL_IDS = {
     "nano_banana": MODEL_NANO_BANANA,
@@ -25,7 +26,9 @@ MODEL_ENDPOINTS = {
         (GEMINI_API_V1_BASE, MODEL_NANO_BANANA_2),
     ],
     "nano_banana_pro": [
+        (GEMINI_API_V1_BASE, MODEL_NANO_BANANA_PRO),
         (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA_PRO),
+        (GEMINI_API_V1BETA_BASE, MODEL_NANO_BANANA_PRO_PREVIEW),
     ],
 }
 
@@ -98,10 +101,6 @@ class NanoBananaBase:
         if model not in MODEL_IDS:
             raise ValueError(f"Unsupported model: {model}")
         return MODEL_IDS[model]
-
-    def _get_generate_url(self, model_name: str) -> str:
-        """Get the generateContent API endpoint URL for the given model."""
-        return f"{GEMINI_API_V1BETA_BASE}/{model_name}:generateContent"
 
     def _get_generate_candidates(self, model: str) -> list[tuple[str, str]]:
         """Get API endpoint/model candidates for a logical plugin model."""
@@ -192,7 +191,7 @@ class NanoBananaBase:
         """
         config: dict[str, Any] = {}
 
-        if response_modalities and model != "nano_banana_pro":
+        if response_modalities:
             config["responseModalities"] = response_modalities
 
         image_config: dict[str, Any] = {}
@@ -201,7 +200,8 @@ class NanoBananaBase:
         if image_size:
             image_config["imageSize"] = image_size
         if image_config:
-            config["responseFormat"] = {"image": image_config}
+            # The raw generateContent ImageConfig fields accept values like "16:9".
+            config["imageConfig"] = image_config
 
         return config
 
@@ -214,8 +214,7 @@ class NanoBananaBase:
         """Enable Google Search grounding for Gemini 3 image models."""
         if use_google_search:
             self._validate_image_options(model, use_google_search=True)
-            tool_name = "googleSearch" if model == "nano_banana_pro" else "google_search"
-            body["tools"] = [{tool_name: {}}]
+            body["tools"] = [{"googleSearch": {}}]
 
     def _build_text_content(self, prompt: str) -> dict[str, Any]:
         """Build a contents entry with just a text prompt."""
